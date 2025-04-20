@@ -15,7 +15,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'body', 'author', 'category', 'created_at']
+        fields = ['id', 'title', 'body','description', 'author', 'category', 'created_at']
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -30,4 +30,13 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+        username = validated_data.get('username')
+        email = validated_data.get('email')
+        password = validated_data.get('password')
+
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
+        return user

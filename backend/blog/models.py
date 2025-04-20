@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 class Post(models.Model):
     title = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
+    description = models.TextField(blank=True, null=True)
     body = models.TextField()
     category = models.CharField(max_length=100, default="Other")  # New field
     created_at = models.DateTimeField(auto_now_add=True)

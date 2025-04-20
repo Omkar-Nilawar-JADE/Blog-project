@@ -8,6 +8,13 @@ from .serializers import PostSerializer, UserSerializer, CommentSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.core.mail import send_mail
+from django.conf import settings
+
+
 
 # Fetch specific user details
 @api_view(['GET'])
@@ -17,6 +24,19 @@ def getUserProfile(request):
     serializer = UserSerializer(user)
     return Response(serializer.data)
     
+
+# Fetch a specific post by ID (no authentication required)
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def getPostById(request, post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found'}, status=404)
+
+    serializer = PostSerializer(post)
+    return Response(serializer.data)
+
 
 # Fetch all posts (no authentication needed)
 @api_view(['GET'])
@@ -35,6 +55,7 @@ def addPost(request):
     post = Post.objects.create(
         title=data.get('title'),
         body=data.get('body'),
+        description = data.get('description'),
         category=data.get('category') or 'Other',  # Get category from request
         author=request.user
     )
@@ -115,3 +136,61 @@ def getCommentsByPost(request, post_id):
     comments = post.comments.all().order_by('-created_at')
     serializer = CommentSerializer(comments, many=True)
     return Response(serializer.data)
+
+
+
+#Forget password functionality
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def sendPasswordResetEmail(request):
+    email = request.data.get('email')
+
+    if not email:
+        return Response({'error': 'Email is required'}, status=400)
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response({'error': 'User with this email does not exist'}, status=404)
+
+    token_generator = PasswordResetTokenGenerator()
+    token = token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+    reset_link = f"{settings.FRONTEND_URL}/resetPassword/{uid}/{token}/"
+
+    send_mail(
+        subject="Reset Your Password",
+        message=f"Click the link to reset your password: {reset_link}",
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[email],
+        fail_silently=False,
+    )
+
+    return Response({'message': 'Password reset email sent.'}, status=200)
+
+
+#Reset Password Functionality
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def resetPassword(request):
+    uid = request.data.get('uid')
+    token = request.data.get('token')
+    new_password = request.data.get('password')
+
+    try:
+        uid = force_str(urlsafe_base64_decode(uid))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        return Response({'error': 'Invalid UID'}, status=400)
+
+    token_generator = PasswordResetTokenGenerator()
+    if not token_generator.check_token(user, token):
+        return Response({'error': 'Invalid or expired token'}, status=400)
+
+    print("Before:", user.check_password(new_password))  # check new password with old will it match or not ans is false
+    user.set_password(new_password)
+    user.save()
+    print("After:", user.check_password(new_password))   # check if new password is updated or not the ans is true
+
+    return Response({'message': 'Password reset successful'}, status=200)

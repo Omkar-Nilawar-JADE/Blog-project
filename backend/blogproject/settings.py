@@ -47,11 +47,13 @@ INSTALLED_APPS = [
     'blog',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware', #cors middleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -60,6 +62,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'blogproject.urls'
+
+CORS_ALLOW_ALL_ORIGINS = True #allow from anywhere
 
 TEMPLATES = [
     {
@@ -140,3 +144,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For testing in console
+# For production use SMTP backend
+
+DEFAULT_FROM_EMAIL = 'noreply@example.com'
+FRONTEND_URL = 'http://localhost:5173'  # Update to your frontend domain
