@@ -64,17 +64,21 @@ const StoreContextProvider = (props) => {
 
   const registerUser = async (username, password, email) => {
     try {
-      const response = await axios.post(`${url}api/register/`, {
-        username,
-        password,
-        email,
-      });
-
+      const response = await axios.post(
+        `${url}api/register/`,
+        { username, password, email },
+        {
+          headers: {
+            "Content-Type": "application/json", // ✅ Ensure JSON request
+          },
+        }
+      );
+  
       const { access, refresh, message } = response.data;
-
+  
       localStorage.setItem("access", access);
       localStorage.setItem("refresh", refresh);
-
+  
       await fetchUserData();
       alert(message || "Registration successful");
       navigate("/");
@@ -83,6 +87,7 @@ const StoreContextProvider = (props) => {
       console.error("Registration error:", error);
     }
   };
+  
 
   const fetchUserData = async () => {
     try {

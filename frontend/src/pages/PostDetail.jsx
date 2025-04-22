@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { StoreContext } from '../context/StoreContext.jsx';
 import ReactMarkdown from 'react-markdown';
-
+import { FaUserAlt } from 'react-icons/fa'; // Importing the user icon from react-icons
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -26,10 +26,16 @@ const PostDetail = () => {
         {post.title}
       </h1>
 
-      {/* Category */}
-      <p className="inline-block text-xs uppercase font-bold bg-[#ff6f61] text-white px-3 py-1 border-2 border-black rounded-sm mb-4">
-        {post.category}
-      </p>
+      {/* Meta: Category & Author */}
+      <div className="flex flex-wrap gap-3 mb-4">
+        <span className="inline-block text-xs uppercase font-bold bg-[#ff6f61] text-white px-3 py-1 border-2 border-black rounded-sm">
+          {post.category}
+        </span>
+        <span className="inline-flex items-center text-xs uppercase font-bold bg-[#4a90e2] text-white px-3 py-1 border-2 border-black rounded-sm">
+          <FaUserAlt className="mr-2" /> {/* Icon for Author */}
+          {post.author}
+        </span>
+      </div>
 
       {/* Body */}
       <div className="mt-4 p-4 bg-white border-2 border-black rounded-sm shadow-[4px_4px_0_0_#000] whitespace-pre-line text-sm text-[#333]">

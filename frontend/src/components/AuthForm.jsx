@@ -11,17 +11,23 @@ const AuthForm = ({ isLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    if (password.length < 8) {
+      alert('Password must be at least 8 characters long');
+      return;
+    }
+  
     if (isLogin) {
       await loginUser(username, password);
     } else {
       await registerUser(username, password, email);
     }
-
+  
     setUsername('');
     setPassword('');
     setEmail('');
   };
+  
 
   const handleForgotPassword = async () => {
     const userEmail = prompt("Enter your email for password reset:");
