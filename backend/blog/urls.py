@@ -12,5 +12,8 @@ urlpatterns = [
     path('comments/<int:post_id>/', views.getCommentsByPost),
     path('forgotPassword/', views.sendPasswordResetEmail),
     path('resetPassword/', views.resetPassword),
+    path('updateUser/', views.updateUser),
+    path('updatePost/<int:post_id>/', views.updatePost),
+    path('deletePost/<int:post_id>/', views.deletePost),
 ]
 

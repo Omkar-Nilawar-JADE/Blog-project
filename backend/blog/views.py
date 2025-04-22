@@ -67,6 +67,45 @@ def addPost(request):
 
 
 
+# Update a post (authentication and ownership required)
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updatePost(request, post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found'}, status=404)
+
+    if post.author != request.user:
+        return Response({'error': 'You are not authorized to update this post'}, status=403)
+
+    post.title = request.data.get('title', post.title)
+    post.body = request.data.get('body', post.body)
+    post.description = request.data.get('description', post.description)
+    post.category = request.data.get('category', post.category)
+    post.save()
+
+    serializer = PostSerializer(post)
+    return Response({'message': 'Post updated successfully', 'post': serializer.data}, status=200)
+
+
+# Delete a post (authentication and ownership required)
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deletePost(request, post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found'}, status=404)
+
+    if post.author != request.user:
+        return Response({'error': 'You are not authorized to delete this post'}, status=403)
+
+    post.delete()
+    return Response({'message': 'Post deleted successfully'}, status=200)
+
+
+
 # User registration
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -101,6 +140,26 @@ def loginUser(request):
         }, status=200)
     else:
         return Response({'error': 'Invalid credentials'}, status=401)
+    
+
+#function to update the data of user (authentication required)
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateUser(request):
+    user = request.user
+    data = request.data
+
+    # Optional fields to update
+    username = data.get('username', user.username)
+    email = data.get('email', user.email)
+
+    user.username = username
+    user.email = email
+    user.save()
+
+    serializer = UserSerializer(user)
+    return Response({'message': 'User updated successfully', 'user': serializer.data}, status=200)
+
 
 #add comments
 @api_view(['POST'])
