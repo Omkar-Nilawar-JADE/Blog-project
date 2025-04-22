@@ -123,6 +123,51 @@ const StoreContextProvider = (props) => {
   };
 
 
+  // 👇 Add these two functions inside StoreContextProvider
+
+  const deletePost = async (postId) => {
+    try {
+      const token = localStorage.getItem("access");
+      if (!token) return;
+
+      await axios.delete(`${url}api/deletePost/${postId}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      alert("Post deleted successfully");
+      fetchUserData(); // Refresh userPosts
+      fetchPosts();    // Optional: refresh global posts if needed
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      alert("Failed to delete post");
+    }
+  };
+
+  const updatePost = async (postId, updatedData) => {
+    try {
+      const token = localStorage.getItem("access");
+      if (!token) return;
+
+      const res = await axios.put(`${url}api/updatePost/${postId}/`, updatedData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      alert("Post updated successfully");
+      fetchUserData(); // Refresh userPosts
+      fetchPosts();    // Optional: refresh global posts if needed
+      return res.data;
+    } catch (error) {
+      console.error("Error updating post:", error);
+      alert("Failed to update post");
+      return null;
+    }
+  };
+
+
   const logoutUser = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
@@ -214,6 +259,8 @@ const StoreContextProvider = (props) => {
     sendPasswordResetEmail,
     resetUserPassword,
     addPost,
+    deletePost,
+    updatePost,
   };
 
   return (

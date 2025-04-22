@@ -39,7 +39,7 @@ const AuthForm = ({ isLogin }) => {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-3 py-2 border rounded"
+          className="w-full px-4 py-2 border-2 border-black rounded-lg bg-white placeholder-gray-600 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
           required
         />
       )}
@@ -49,7 +49,7 @@ const AuthForm = ({ isLogin }) => {
         placeholder="Username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        className="w-full px-3 py-2 border rounded"
+        className="w-full px-4 py-2 border-2 border-black rounded-lg bg-white placeholder-gray-600 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
         required
       />
 
@@ -58,17 +58,16 @@ const AuthForm = ({ isLogin }) => {
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="w-full px-3 py-2 border rounded"
+        className="w-full px-4 py-2 border-2 border-black rounded-lg bg-white placeholder-gray-600 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
         required
       />
 
-      {/* Forgot Password Link (only in Login mode) */}
       {isLogin && (
         <div className="text-right">
           <button
             type="button"
             onClick={handleForgotPassword}
-            className="text-sm text-blue-600 hover:underline"
+            className="text-sm text-blue-700 underline hover:text-blue-900 cursor-pointer"
           >
             Forgot Password?
           </button>
@@ -80,7 +79,7 @@ const AuthForm = ({ isLogin }) => {
 
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+        className="w-full bg-black text-white py-2 rounded-lg text-lg font-bold hover:bg-gray-800 transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
       >
         {isLogin ? 'Login' : 'Register'}
       </button>
