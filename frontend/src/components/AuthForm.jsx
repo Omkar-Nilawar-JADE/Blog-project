@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { StoreContext } from '../context/StoreContext.jsx';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 const AuthForm = ({ isLogin }) => {
   const { loginUser, registerUser, sendPasswordResetEmail } = useContext(StoreContext);
@@ -8,26 +9,26 @@ const AuthForm = ({ isLogin }) => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [emailMessage, setEmailMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (password.length < 8) {
       alert('Password must be at least 8 characters long');
       return;
     }
-  
+
     if (isLogin) {
       await loginUser(username, password);
     } else {
       await registerUser(username, password, email);
     }
-  
+
     setUsername('');
     setPassword('');
     setEmail('');
   };
-  
 
   const handleForgotPassword = async () => {
     const userEmail = prompt("Enter your email for password reset:");
@@ -59,14 +60,23 @@ const AuthForm = ({ isLogin }) => {
         required
       />
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="w-full px-4 py-2 border-2 border-black rounded-lg bg-white placeholder-gray-600 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-        required
-      />
+      <div className="relative">
+        <input
+          type={showPassword ? "text" : "password"}
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full px-4 py-2 border-2 border-black rounded-lg bg-white placeholder-gray-600 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+          required
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+        >
+          {showPassword ? <AiFillEyeInvisible size={30} /> : <AiFillEye size={30} />}
+        </button>
+      </div>
 
       {isLogin && (
         <div className="text-right">

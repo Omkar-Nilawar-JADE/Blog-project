@@ -13,7 +13,7 @@ const StoreContextProvider = (props) => {
   const [posts, setPosts] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("access"));
 
   const fetchPosts = async () => {
     try {
@@ -44,6 +44,34 @@ const StoreContextProvider = (props) => {
       return [];
     }
   };
+
+  const addComment = async (postId, body) => {
+    try {
+      const token = localStorage.getItem("access");
+      if (!token) {
+        throw new Error("User not logged in");
+      }
+  
+      const res = await axios.post(
+        `${url}api/addComment/`,
+        { post_id: postId, body },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      return { success: true, comment: res.data };
+    } catch (error) {
+      console.error("Error adding comment:", error.response?.data || error.message);
+      return {
+        success: false,
+        message: error.response?.data?.error || "Failed to add comment",
+      };
+    }
+  };
+  
 
   const loginUser = async (username, password) => {
     try {
@@ -122,6 +150,7 @@ const StoreContextProvider = (props) => {
       });
       console.log("Post added:", res.data);
       fetchPosts(); // Refresh posts
+      fetchUserData();
     } catch (err) {
       console.error("Error adding post:", err);
     }
@@ -171,6 +200,60 @@ const StoreContextProvider = (props) => {
       return null;
     }
   };
+
+  const addDraft = async (data) => {
+    try {
+      const res = await axios.post(`${url}api/addDraft/`, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      });
+      return res.data;
+    } catch (err) {
+      console.error("Error saving draft:", err.response?.data || err.message);
+    }
+  };
+
+  const fetchDrafts = async () => {
+    try {
+      const res = await axios.get(`${url}api/fetchDrafts/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      });
+      return res.data;
+    } catch (err) {
+      console.error("Error fetching drafts:", err.response?.data || err.message);
+    }
+  };
+
+  const deleteDraft = async (draftId) => {
+    try {
+      const res = await axios.delete(`${url}api/deleteDraft/${draftId}/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      });
+      return res.data;
+    } catch (err) {
+      console.error("Error deleting draft:", err.response?.data || err.message);
+    }
+  };
+
+  const editDraft = async (draftId, updatedData) => {
+    try {
+      const res = await axios.put(`${url}api/editDraft/${draftId}/`, updatedData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      });
+      return res.data;
+    } catch (err) {
+      console.error("Error updating draft:", err.response?.data || err.message);
+    }
+  };
+  
+  
 
 
   const logoutUser = () => {
@@ -227,7 +310,6 @@ const StoreContextProvider = (props) => {
     const token = localStorage.getItem("access");
     if (token) {
       fetchUserData();
-      setIsLoggedIn(true);
     }
 
     const handleStorageChange = (event) => {
@@ -266,6 +348,11 @@ const StoreContextProvider = (props) => {
     addPost,
     deletePost,
     updatePost,
+    addDraft,
+    fetchDrafts,
+    editDraft,
+    deleteDraft,
+    addComment,
   };
 
   return (

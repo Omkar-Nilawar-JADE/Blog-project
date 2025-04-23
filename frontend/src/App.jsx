@@ -9,6 +9,7 @@ import UserPosts from './pages/UserPosts.jsx';
 import ResetPassword from './components/ResetPassword.jsx';
 import AddPost from './pages/AddPost.jsx';
 import {Routes,Route} from 'react-router-dom';
+import UserDrafts from './pages/UserDraft.jsx';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -24,6 +25,7 @@ function App() {
         <Route path='/userPosts' element={<UserPosts />} />
         <Route path='/resetPassword/:uid/:token' element={<ResetPassword />} />
         <Route path='/addPost' element={<AddPost />} />
+        <Route path='/userDrafts' element={<UserDrafts />} />
       </Routes>
     </>
   )

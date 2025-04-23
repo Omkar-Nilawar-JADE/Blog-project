@@ -2,20 +2,47 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { StoreContext } from '../context/StoreContext.jsx';
 import ReactMarkdown from 'react-markdown';
-import { FaUserAlt } from 'react-icons/fa'; // Importing the user icon from react-icons
+import { FaUserAlt } from 'react-icons/fa';
 
 const PostDetail = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
-  const { fetchPostById, fetchCommentsByPostId } = useContext(StoreContext);
+  const [newComment, setNewComment] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const {
+    fetchPostById,
+    fetchCommentsByPostId,
+    addComment,
+    isLoggedIn,
+    userInfo,
+  } = useContext(StoreContext);
+
+  const loadPost = async () => {
+    setPost(await fetchPostById(id));
+    setComments(await fetchCommentsByPostId(id));
+  };
 
   useEffect(() => {
-    (async () => {
-      setPost(await fetchPostById(id));
-      setComments(await fetchCommentsByPostId(id));
-    })();
+    loadPost();
   }, [id]);
+
+  const handleAddComment = async () => {
+    if (!newComment.trim()) return;
+
+    setIsSubmitting(true);
+
+    const response = await addComment(id, newComment);
+    if (response.success) {
+      setNewComment('');
+      await loadPost(); // Reload comments after adding
+    } else {
+      alert(response.message || 'Error adding comment');
+    }
+
+    setIsSubmitting(false);
+  };
 
   if (!post) return <p className="text-center mt-12 font-mono">Loading…</p>;
 
@@ -32,7 +59,7 @@ const PostDetail = () => {
           {post.category}
         </span>
         <span className="inline-flex items-center text-xs uppercase font-bold bg-[#4a90e2] text-white px-3 py-1 border-2 border-black rounded-sm">
-          <FaUserAlt className="mr-2" /> {/* Icon for Author */}
+          <FaUserAlt className="mr-2" />
           {post.author}
         </span>
       </div>
@@ -61,6 +88,26 @@ const PostDetail = () => {
         </div>
       ) : (
         <p className="text-sm text-gray-600 italic">No comments yet.</p>
+      )}
+
+      {/* Add Comment Form */}
+      {isLoggedIn && (
+        <div className="mt-6">
+          <textarea
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Add a comment..."
+            className="w-full p-3 border-2 border-black rounded-sm text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#4a90e2]"
+            rows={3}
+          ></textarea>
+          <button
+            onClick={handleAddComment}
+            disabled={isSubmitting}
+            className="mt-2 bg-[#4a90e2] text-white font-bold uppercase text-sm px-4 py-2 border-2 border-black rounded-sm shadow-[2px_2px_0_0_#000] hover:bg-[#3b7dc4] disabled:opacity-50"
+          >
+            {isSubmitting ? "Posting..." : "Post Comment"}
+          </button>
+        </div>
       )}
     </div>
   );

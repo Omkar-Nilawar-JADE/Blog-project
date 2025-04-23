@@ -15,5 +15,9 @@ urlpatterns = [
     path('updateUser/', views.updateUser),
     path('updatePost/<int:post_id>/', views.updatePost),
     path('deletePost/<int:post_id>/', views.deletePost),
+    path('addDraft/', views.addDraft),
+    path('editDraft/<int:draft_id>/', views.editDraft),
+    path('deleteDraft/<int:draft_id>/', views.deleteDraft),
+    path('fetchDrafts/', views.fetchUserDrafts),
 ]
 

@@ -13,6 +13,8 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import send_mail
 from django.conf import settings
+from .models import Draft
+from .serializers import DraftSerializer
 
 
 
@@ -253,3 +255,64 @@ def resetPassword(request):
     print("After:", user.check_password(new_password))   # check if new password is updated or not the ans is true
 
     return Response({'message': 'Password reset successful'}, status=200)
+
+
+# Create a draft
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def addDraft(request):
+    data = request.data
+    draft = Draft.objects.create(
+        title=data.get('title'),
+        body=data.get('body', ''),
+        description=data.get('description', ''),
+        category=data.get('category', 'Other'),
+        author=request.user
+    )
+    serializer = DraftSerializer(draft)
+    return Response({'message': 'Draft created successfully', 'draft': serializer.data}, status=201)
+
+# Edit a draft
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def editDraft(request, draft_id):
+    try:
+        draft = Draft.objects.get(id=draft_id)
+    except Draft.DoesNotExist:
+        return Response({'error': 'Draft not found'}, status=404)
+
+    if draft.author != request.user:
+        return Response({'error': 'You are not authorized to edit this draft'}, status=403)
+
+    draft.title = request.data.get('title', draft.title)
+    draft.body = request.data.get('body', draft.body)
+    draft.description = request.data.get('description', draft.description)
+    draft.category = request.data.get('category', draft.category)
+    draft.save()
+
+    serializer = DraftSerializer(draft)
+    return Response({'message': 'Draft updated successfully', 'draft': serializer.data}, status=200)
+
+# Delete a draft
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteDraft(request, draft_id):
+    try:
+        draft = Draft.objects.get(id=draft_id)
+    except Draft.DoesNotExist:
+        return Response({'error': 'Draft not found'}, status=404)
+
+    if draft.author != request.user:
+        return Response({'error': 'You are not authorized to delete this draft'}, status=403)
+
+    draft.delete()
+    return Response({'message': 'Draft deleted successfully'}, status=200)
+
+# Fetch all drafts of a user
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def fetchUserDrafts(request):
+    drafts = Draft.objects.filter(author=request.user).order_by('-created_at')
+    serializer = DraftSerializer(drafts, many=True)
+    return Response(serializer.data)
+

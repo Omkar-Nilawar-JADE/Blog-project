@@ -3,7 +3,7 @@ import { StoreContext } from "../context/StoreContext";
 import { useNavigate } from "react-router-dom";
 
 const AddPost = () => {
-  const { isLoggedIn, addPost } = useContext(StoreContext);
+  const { isLoggedIn, addPost, addDraft } = useContext(StoreContext);
   const [formData, setFormData] = useState({
     title: "",
     body: "",
@@ -24,16 +24,23 @@ const AddPost = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handlePublish = async (e) => {
     e.preventDefault();
     await addPost(formData);
-    navigate("/"); // Redirect to homepage after adding
+    navigate("/");
+  };
+
+  const handleSaveDraft = async (e) => {
+    e.preventDefault();
+    await addDraft(formData);
+    alert("Saved as draft!");
+    navigate("/");
   };
 
   return (
     <div className="max-w-xl mx-auto mt-10 bg-white p-6 rounded shadow border border-gray-300">
       <h2 className="text-2xl font-semibold mb-4 text-center">Add New Post</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form className="space-y-4">
         <input
           type="text"
           name="title"
@@ -73,12 +80,21 @@ const AddPost = () => {
           <option value="Travel">Travel</option>
         </select>
 
-        <button
-          type="submit"
-          className="w-full bg-black text-white py-2 rounded hover:bg-gray-800"
-        >
-          Publish Post
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="submit"
+            onClick={handlePublish}
+            className="w-full bg-black text-white py-2 rounded hover:bg-gray-800"
+          >
+            Publish Post
+          </button>
+          <button
+            onClick={handleSaveDraft}
+            className="w-full bg-gray-200 text-black py-2 rounded hover:bg-gray-300"
+          >
+            Save as Draft
+          </button>
+        </div>
       </form>
     </div>
   );

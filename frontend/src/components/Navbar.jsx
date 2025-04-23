@@ -48,6 +48,12 @@ const Navbar = () => {
                 Posts
               </button>
               <button
+                onClick={() => handleNavigate("/userDrafts")}
+                className="w-full text-left px-4 py-2 hover:bg-gray-200 text-yellow-600"
+              >
+                Drafts
+              </button>
+              <button
                 onClick={handleLogout}
                 className="w-full text-left px-4 py-2 hover:bg-gray-200 text-red-600"
               >
