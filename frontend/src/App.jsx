@@ -8,6 +8,7 @@ import UserProfile from './pages/UserProfile.jsx';
 import UserPosts from './pages/UserPosts.jsx';
 import ResetPassword from './components/ResetPassword.jsx';
 import AddPost from './pages/AddPost.jsx';
+import LandingPage from './pages/LandingPage.jsx';
 import {Routes,Route} from 'react-router-dom';
 import UserDrafts from './pages/UserDraft.jsx';
 
@@ -18,7 +19,8 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path='/' element={<Home />} />
+        <Route path='/' element={<LandingPage />} />
+        <Route path='/home' element={<Home />} />
         <Route path='/Auth' element={<AuthPage />} />
         <Route path='/post/:id' element={<PostDetail />} />
         <Route path='/profile' element={<UserProfile />} />

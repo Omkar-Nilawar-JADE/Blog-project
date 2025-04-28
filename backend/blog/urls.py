@@ -20,4 +20,3 @@ urlpatterns = [
     path('deleteDraft/<int:draft_id>/', views.deleteDraft),
     path('fetchDrafts/', views.fetchUserDrafts),
 ]
-

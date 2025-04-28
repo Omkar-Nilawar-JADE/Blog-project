@@ -83,7 +83,7 @@ const StoreContextProvider = (props) => {
 
       await fetchUserData();
       alert(message || "Login successful");
-      navigate("/");
+      navigate("/home");
     } catch (error) {
       alert("Login failed. Please check credentials.");
       console.error("Login error:", error);
@@ -109,7 +109,7 @@ const StoreContextProvider = (props) => {
   
       await fetchUserData();
       alert(message || "Registration successful");
-      navigate("/");
+      navigate("/home");
     } catch (error) {
       alert("Registration failed. Try again.");
       console.error("Registration error:", error);

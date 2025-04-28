@@ -17,7 +17,7 @@ const AddPost = () => {
     if (!isLoggedIn) {
       navigate("/Auth");
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,14 +27,18 @@ const AddPost = () => {
   const handlePublish = async (e) => {
     e.preventDefault();
     await addPost(formData);
-    navigate("/");
+    navigate("/home");
   };
 
   const handleSaveDraft = async (e) => {
     e.preventDefault();
     await addDraft(formData);
     alert("Saved as draft!");
-    navigate("/");
+    navigate("/home");
+  };
+
+  const handleCancel = () => {
+    navigate("/home");
   };
 
   return (
@@ -84,15 +88,22 @@ const AddPost = () => {
           <button
             type="submit"
             onClick={handlePublish}
-            className="w-full bg-black text-white py-2 rounded hover:bg-gray-800"
+            className="flex-1 bg-black text-white py-2 rounded hover:bg-gray-800"
           >
             Publish Post
           </button>
           <button
             onClick={handleSaveDraft}
-            className="w-full bg-gray-200 text-black py-2 rounded hover:bg-gray-300"
+            className="flex-1 bg-gray-200 text-black py-2 rounded hover:bg-gray-300"
           >
             Save as Draft
+          </button>
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="flex-1 bg-red-500 text-white py-2 rounded hover:bg-red-600"
+          >
+            Cancel
           </button>
         </div>
       </form>
