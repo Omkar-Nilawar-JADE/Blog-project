@@ -200,7 +200,7 @@ def getCommentsByPost(request, post_id):
 
 
 
-#Forget password functionality
+# Forget password functionality
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def sendPasswordResetEmail(request):
@@ -220,12 +220,29 @@ def sendPasswordResetEmail(request):
 
     reset_link = f"{settings.FRONTEND_URL}/resetPassword/{uid}/{token}/"
 
+    # Create a nice HTML template
+    html_message = f"""
+    <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f2f2f2;">
+        <div style="max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
+            <h2 style="color: #333;">Password Reset Request</h2>
+            <p>Hello,</p>
+            <p>We received a request to reset your password. Click the button below to proceed:</p>
+            <a href="{reset_link}" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #4a90e2; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
+            <p style="margin-top: 30px; font-size: 12px; color: #888;">
+                If you didn't request a password reset, you can ignore this email.
+            </p>
+            <p style="margin-top: 10px; font-size: 12px; color: #888;">Thanks,<br>Your Blog Team</p>
+        </div>
+    </div>
+    """
+
     send_mail(
-        subject="Reset Your Password",
-        message=f"Click the link to reset your password: {reset_link}",
+        subject="Reset Your Password - Blog App",
+        message=f"Click the link to reset your password: {reset_link}",  # Fallback for non-HTML email clients
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[email],
         fail_silently=False,
+        html_message=html_message  # 👉 HTML message here
     )
 
     return Response({'message': 'Password reset email sent.'}, status=200)
