@@ -7,7 +7,7 @@ const AuthPage = () => {
   const toggleForm = () => setIsLogin((prev) => !prev);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8f8f8]">
+    <div className="min-h-screen flex items-center justify-center bg-[#87CEEB]">
       <div className="bg-[#fdfdfd] border-2 border-black p-8 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full max-w-md">
         <h2 className="text-3xl font-extrabold text-center mb-6 border-b-2 border-black pb-2">
           {isLogin ? 'Login' : 'Register'}

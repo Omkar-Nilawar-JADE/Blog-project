@@ -1,14 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../context/StoreContext.jsx';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { FaUserAlt, FaShareAlt, FaFilePdf } from 'react-icons/fa';
+import { FaUserAlt, FaShareAlt, FaFilePdf, FaArrowLeft } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 const PostDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -80,113 +81,126 @@ const PostDetail = () => {
   if (!post) return <p className="text-center mt-12 font-mono">Loading…</p>;
 
   return (
-    <div className="relative max-w-3xl mx-auto mt-8 p-6 bg-[#fefff3] border-4 border-black rounded-sm shadow-[8px_8px_0_0_#000]">
-      {/* Top-right toolbar */}
-      <div className="absolute top-2 right-2 flex gap-2">
+    <div className="relative min-h-screen bg-[#fafafa] px-4 pt-4">
+      {/* Back Button */}
+      <div className="absolute top-16 left-40 z-10">
         <button
-          onClick={handleShareLink}
-          className="p-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700"
-          title="Share link"
+          onClick={() => navigate('/home')}
+          className="flex items-center gap-2 px-3 py-2 bg-gray-200 text-black border-2 border-black rounded-md shadow-[2px_2px_0_0_#000] hover:bg-gray-300"
         >
-          <FaShareAlt />
-        </button>
-        <button
-          onClick={handleDownloadPDF}
-          className="p-1 bg-red-600 text-white rounded text-xs hover:bg-red-700"
-          title="Download PDF"
-        >
-          <FaFilePdf />
+          <FaArrowLeft />
         </button>
       </div>
 
-      {/* Title */}
-      <h1 className="text-3xl font-extrabold font-mono uppercase mb-3 border-b-4 border-[#ff6f61] pb-2">
-        {post.title}
-      </h1>
-
-      {/* Meta */}
-      <div className="flex flex-wrap gap-3 mb-4">
-        <span className="text-xs uppercase font-bold bg-[#ff6f61] text-white px-3 py-1 border-2 border-black rounded-sm">
-          {post.category}
-        </span>
-        <span className="inline-flex items-center text-xs uppercase font-bold bg-[#4a90e2] text-white px-3 py-1 border-2 border-black rounded-sm">
-          <FaUserAlt className="mr-2" />
-          {post.author}
-        </span>
-      </div>
-
-      {/* Body */}
-      <div className="prose prose-sm mt-4 p-4 bg-white border-2 border-black rounded-sm shadow-[4px_4px_0_0_#000]">
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            a: ({ node, ...props }) => (
-              <a
-                {...props}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 underline hover:text-blue-800"
-              />
-            ),
-          }}
-        >
-          {post.body}
-        </ReactMarkdown>
-      </div>
-
-      {/* Comments */}
-      <h2 className="text-2xl font-bold font-mono uppercase mt-8 mb-4 border-t-4 border-[#4a90e2] pt-2">
-        Comments
-      </h2>
-      {comments.length ? (
-        <div className="space-y-4">
-          {comments.map(c => (
-            <div
-              key={c.id}
-              className="p-4 bg-[#e6f7ff] border-4 border-black rounded-sm shadow-[4px_4px_0_0_#000]"
-            >
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  a: ({ node, ...props }) => (
-                    <a
-                      {...props}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 underline hover:text-blue-800"
-                    />
-                  ),
-                }}
-              >
-                {c.body}
-              </ReactMarkdown>
-              <p className="text-xs italic text-right mt-2">— {c.author}</p>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p className="italic text-gray-600">No comments yet.</p>
-      )}
-
-      {/* Add Comment */}
-      {isLoggedIn && (
-        <div className="mt-6">
-          <textarea
-            value={newComment}
-            onChange={e => setNewComment(e.target.value)}
-            placeholder="Add a comment..."
-            className="w-full p-3 border-2 border-black rounded-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#4a90e2]"
-            rows={3}
-          />
+      {/* Post Card */}
+      <div className="relative max-w-3xl mx-auto mt-12 p-6 bg-[#fefff3] border-4 border-black rounded-sm shadow-[8px_8px_0_0_#000]">
+        {/* Top-right toolbar */}
+        <div className="absolute top-2 right-2 flex gap-2">
           <button
-            onClick={handleAddComment}
-            disabled={isSubmitting}
-            className="mt-2 bg-[#4a90e2] text-white font-bold uppercase text-sm px-4 py-2 border-2 border-black rounded-sm shadow-[2px_2px_0_0_#000] hover:bg-[#3b7dc4] disabled:opacity-50"
+            onClick={handleShareLink}
+            className="p-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700"
+            title="Share link"
           >
-            {isSubmitting ? 'Posting…' : 'Post Comment'}
+            <FaShareAlt />
+          </button>
+          <button
+            onClick={handleDownloadPDF}
+            className="p-1 bg-red-600 text-white rounded text-xs hover:bg-red-700"
+            title="Download PDF"
+          >
+            <FaFilePdf />
           </button>
         </div>
-      )}
+
+        {/* Title */}
+        <h1 className="text-3xl font-extrabold font-mono uppercase mb-3 border-b-4 border-[#ff6f61] pb-2">
+          {post.title}
+        </h1>
+
+        {/* Meta */}
+        <div className="flex flex-wrap gap-3 mb-4">
+          <span className="text-xs uppercase font-bold bg-[#ff6f61] text-white px-3 py-1 border-2 border-black rounded-sm">
+            {post.category}
+          </span>
+          <span className="inline-flex items-center text-xs uppercase font-bold bg-[#4a90e2] text-white px-3 py-1 border-2 border-black rounded-sm">
+            <FaUserAlt className="mr-2" />
+            {post.author}
+          </span>
+        </div>
+
+        {/* Body */}
+        <div className="prose prose-sm mt-4 p-4 bg-white border-2 border-black rounded-sm shadow-[4px_4px_0_0_#000]">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              a: ({ node, ...props }) => (
+                <a
+                  {...props}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline hover:text-blue-800"
+                />
+              ),
+            }}
+          >
+            {post.body}
+          </ReactMarkdown>
+        </div>
+
+        {/* Comments */}
+        <h2 className="text-2xl font-bold font-mono uppercase mt-8 mb-4 border-t-4 border-[#4a90e2] pt-2">
+          Comments
+        </h2>
+        {comments.length ? (
+          <div className="space-y-4">
+            {comments.map(c => (
+              <div
+                key={c.id}
+                className="p-4 bg-[#e6f7ff] border-4 border-black rounded-sm shadow-[4px_4px_0_0_#000]"
+              >
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    a: ({ node, ...props }) => (
+                      <a
+                        {...props}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 underline hover:text-blue-800"
+                      />
+                    ),
+                  }}
+                >
+                  {c.body}
+                </ReactMarkdown>
+                <p className="text-xs italic text-right mt-2">— {c.author}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="italic text-gray-600">No comments yet.</p>
+        )}
+
+        {/* Add Comment */}
+        {isLoggedIn && (
+          <div className="mt-6">
+            <textarea
+              value={newComment}
+              onChange={e => setNewComment(e.target.value)}
+              placeholder="Add a comment..."
+              className="w-full p-3 border-2 border-black rounded-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#4a90e2]"
+              rows={3}
+            />
+            <button
+              onClick={handleAddComment}
+              disabled={isSubmitting}
+              className="mt-2 bg-[#4a90e2] text-white font-bold uppercase text-sm px-4 py-2 border-2 border-black rounded-sm shadow-[2px_2px_0_0_#000] hover:bg-[#3b7dc4] disabled:opacity-50"
+            >
+              {isSubmitting ? 'Posting…' : 'Post Comment'}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

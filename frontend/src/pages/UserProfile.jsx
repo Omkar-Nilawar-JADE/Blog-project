@@ -21,6 +21,11 @@ const UserProfile = () => {
 
   const handleForgotPassword = async () => {
     const email = prompt("Enter your email for password reset:");
+    if( email != userInfo.email)
+    {
+      setEmailMessage("this email is not Yours")
+      return ;
+    }
     if (email) {
       const res = await sendPasswordResetEmail(email);
       setEmailMessage(res.message);
