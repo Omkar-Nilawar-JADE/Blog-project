@@ -1,0 +1,23 @@
+@keyframes walk {
+    0% {
+      left: 95%;
+      transform: scaleX(1); /* Normal direction */
+    }
+    50% {
+      left: -80px;
+      transform: scaleX(1); /* Still facing left */
+    }
+    50.0001% {
+      transform: scaleX(-1); /* Flip once it hits the wall */
+    }
+    100% {
+      left: 95%;
+      transform: scaleX(-1); /* Walking back flipped */
+    }
+  }
+  
+  .animate-walk {
+    position: absolute;
+    animation: walk 20s linear infinite;
+  }
+  

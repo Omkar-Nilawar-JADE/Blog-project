@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../context/StoreContext.jsx';
 import { Menu, X } from "lucide-react";
-
+import ducky from "../../src/assets/ducky.png"
 const Navbar = () => {
   const navigate = useNavigate();
   const { isLoggedIn, userInfo, logoutUser } = useContext(StoreContext);
@@ -21,15 +21,24 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="border-b-8 border-black bg-[#f7f3ea]">
+    <nav className="border-b-8 border-yellow-300 bg-black">
       <div className="w-[90%] md:w-[85%] mx-auto">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
+            <img 
+            src={ducky}
+            className='w-[60px] h-[60px]'
+            />
             <span 
-              className="text-black font-black text-2xl transform -rotate-2 hover:rotate-0 transition-transform cursor-pointer"
-              onClick={() => navigate('/')}
+              className="text-white font-bold text-2xl transform -rotate-2 hover:rotate-0 transition-transform cursor-pointer"
+              onClick={() => {
+                if(isLoggedIn)
+                  navigate("/home");
+                else  
+                  navigate("/");
+              }}
             >
-              MY BLOG
+             DUCKY BLOGS
             </span>
           </div>
 
@@ -45,9 +54,9 @@ const Navbar = () => {
                   <img
                     src={`/Avatars/42.jpg`}
                     alt="User Avatar"
-                    className="w-10 h-10 rounded-full object-cover border-2 border-black"
+                    className="w-13 h-13 rounded-full object-cover border-2 border-black"
                   />
-                  <span className="text-sm">Hi, {userInfo?.username || 'User'}</span>
+                  <span className="text-sm text-white">Hi, {userInfo?.username || 'User'}</span>
                 </button>
 
                 {showMenu && (
@@ -62,7 +71,7 @@ const Navbar = () => {
             ) : (
               <button 
                 onClick={() => handleNavigate("/Auth")} 
-                className="bg-[#cc0000] hover:bg-red-600 text-white font-bold py-2 px-6 transform hover:rotate-1 transition-all border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]"
+                className="bg-[#cc0000] hover:bg-red-600 text-white font-bold py-2 px-6 transform hover:rotate-1 transition-all border-white shadow-[4px_4px_0px_0px]"
               >
                 REGISTER
               </button>
@@ -70,7 +79,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center text-white">
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2">
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>

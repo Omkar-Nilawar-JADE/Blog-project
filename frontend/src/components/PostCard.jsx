@@ -6,29 +6,30 @@ import { Link } from 'react-router-dom';
 const PostCard = ({
   post,
   idx,
-  bgColor = 'bg-[#f8c291]',
   hoverColor = 'hover:bg-[#c198db]'
 }) => {
   const timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true });
+  const colors = ['#EBDBCE','#A7B74A','#ED6474','#509A89','#AE9DAD','#D4DBA7','#C4C3E3','#FCDD9D','#E7A0CC'];
+  const bgColor = colors[idx % colors.length]
+
 
   return (
     <Link to={`/post/${post.id}`}>
       <div
         className={`
           relative
-          ${bgColor}
-          ${hoverColor}
           transition-colors duration-300
           border-2 border-black
-          shadow-[4px_4px_0_#000]
-          rounded-lg
+          shadow-[8px_8px_0_#000]
+          rounded-sm
           p-4
           w-[300px]
           flex flex-col justify-between
         `}
+        style={{ backgroundColor: bgColor }}
       >
         <div>
-          <h2 className="text-lg font-bold mb-2 leading-snug">{post.title}</h2>
+          <h2 className="text-2xl font-bold mb-2 leading-snug break-words">{post.title}</h2>
           {post.description && (
             <p className="text-sm mb-4">{post.description}</p>
           )}

@@ -11,6 +11,7 @@ import AddPost from './pages/AddPost.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import {Routes,Route} from 'react-router-dom';
 import UserDrafts from './pages/UserDraft.jsx';
+import Footer from './components/Footer.jsx';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -29,6 +30,7 @@ function App() {
         <Route path='/addPost' element={<AddPost />} />
         <Route path='/userDrafts' element={<UserDrafts />} />
       </Routes>
+      <Footer />
     </>
   )
 }

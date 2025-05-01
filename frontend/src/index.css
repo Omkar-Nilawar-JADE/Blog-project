@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+.masonry-column {
+    background-clip: padding-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Adds vertical spacing */
+}
+  
+.masonry-column > div {
+    margin-bottom: 24px;
+}
+  
