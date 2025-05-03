@@ -37,16 +37,27 @@ const UserPosts = () => {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    await updatePost(editPostData.id, {
-      title: editPostData.title,
-      body: editPostData.body,
-      category: editPostData.category,
-    });
+    const { title, body, category } = editPostData;
+
+    if (title.length > 50) {
+      alert("Title cannot exceed 50 characters.");
+      return;
+    }
+    if (body.length > 700) {
+      alert("Body cannot exceed 700 characters.");
+      return;
+    }
+    if (!title.trim() || !body.trim() || !category) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    await updatePost(editPostData.id, { title, body, category });
     setIsEditing(false);
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 mt-6 font-mono">
+    <div className="max-w-3xl mx-auto p-6 mt-6 font-mono min-h-screen">
       <h2 className="text-3xl font-extrabold text-center mb-6 underline decoration-4 decoration-pink-500">
         My Posts
       </h2>
@@ -96,6 +107,7 @@ const UserPosts = () => {
                 <input
                   type="text"
                   name="title"
+                  maxLength={50}
                   value={editPostData.title}
                   onChange={handleEditChange}
                   className="w-full border-2 border-black px-3 py-2 bg-yellow-50"
@@ -108,6 +120,7 @@ const UserPosts = () => {
                   name="body"
                   value={editPostData.body}
                   onChange={handleEditChange}
+                  maxLength={700}
                   className="w-full border-2 border-black px-3 py-2 bg-yellow-50"
                   rows="4"
                   required

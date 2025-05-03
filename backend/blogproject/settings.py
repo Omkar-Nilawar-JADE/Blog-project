@@ -152,9 +152,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = 'noreplyblogproject@gmail.com'
-EMAIL_HOST_PASSWORD = 'ibfm qudj gzyv xien'  # App password
+EMAIL_HOST_USER = 'dummyblogwebsite@gmail.com'
+EMAIL_HOST_PASSWORD = 'pvmw wgrv cvca twgr'  # App password
 
-DEFAULT_FROM_EMAIL = 'noreplyblogproject@gmail.com'
+DEFAULT_FROM_EMAIL = 'dummyblogwebsite@gmail.com'
 FRONTEND_URL = 'http://localhost:5173'  # Or your deployed frontend
 

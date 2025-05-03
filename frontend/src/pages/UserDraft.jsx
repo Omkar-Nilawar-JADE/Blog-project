@@ -43,13 +43,17 @@ const UserDrafts = () => {
   };
 
   const handlePublish = async (draft) => {
-    const { title, body,description, category } = draft;
+    const { title, body, description, category } = draft;
     if (!title.trim() || !body.trim() || !category) {
       alert("Please fill in all fields before publishing.");
       return;
     }
+    if (title.length > 50 || description.length > 100 || body.length > 700) {
+      alert("One or more fields exceed the character limits.");
+      return;
+    }
     await addPost({ title, body, description, category });
-    await deleteDraft(draft.id); // Remove draft after publishing
+    await deleteDraft(draft.id);
     loadDrafts();
   };
 
@@ -69,16 +73,32 @@ const UserDrafts = () => {
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
+
+    const limits = {
+      title: 50,
+      description: 100,
+      body: 300,
+    };
+
+    if (limits[name] && value.length > limits[name]) return;
+
     setEditFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    const { title, body, category } = editFormData;
+    const { title, body, description, category } = editFormData;
+
     if (!title.trim() || !body.trim() || !category) {
       alert("Please fill in all fields before saving.");
       return;
     }
+
+    if (title.length > 50 || description.length > 100 || body.length > 700) {
+      alert("One or more fields exceed the character limits.");
+      return;
+    }
+
     await editDraft(editingDraft, editFormData);
     setEditingDraft(null);
     loadDrafts();
@@ -149,6 +169,7 @@ const UserDrafts = () => {
                   value={editFormData.title}
                   onChange={handleEditChange}
                   placeholder="Title"
+                  maxLength={50}
                   className="w-full border-2 border-black p-2 rounded bg-gray-100 font-bold"
                   required
                 />
@@ -158,6 +179,7 @@ const UserDrafts = () => {
                   onChange={handleEditChange}
                   placeholder="Body"
                   rows={4}
+                  maxLength={700}
                   className="w-full border-2 border-black p-2 rounded bg-gray-100 font-bold"
                   required
                 />
@@ -167,6 +189,7 @@ const UserDrafts = () => {
                   onChange={handleEditChange}
                   placeholder="Short Description"
                   rows={2}
+                  maxLength={100}
                   className="w-full border-2 border-black p-2 rounded bg-gray-100 font-bold"
                 />
                 <select

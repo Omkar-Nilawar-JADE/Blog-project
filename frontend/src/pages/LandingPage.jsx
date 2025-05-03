@@ -75,7 +75,10 @@ const LandingPage = () => {
               Sign up for Ducky Blogs & post or read the latest articles from your fellow Jadeans.
             </p>
             <div className="max-w-lg mx-auto">
-              <button className="bg-black text-white font-bold py-3 px-6 border-4 border-black hover:bg-white hover:text-black transition-colors shadow-[6px_6px_0px_0px_rgba(255,255,255,0.5)]">
+              <button 
+                className="bg-black text-white font-bold py-3 px-6 border-4 border-black hover:bg-white hover:text-black transition-colors shadow-[6px_6px_0px_0px_rgba(255,255,255,0.5)]"
+                onClick={() => navigate("/Auth")}
+              >
                 REGISTER NOW!
               </button>
             </div>
