@@ -71,6 +71,30 @@ const StoreContextProvider = (props) => {
       };
     }
   };
+
+  const deleteComment = async (commentId) => {
+    try {
+      const token = localStorage.getItem("access");
+      if (!token) throw new Error("User not logged in");
+  
+      await axios.delete(`${url}api/deleteComment/${commentId}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      // alert("Comment deleted successfully");
+      // No need to refetch entire user or post unless needed
+      return { success: true };
+    } catch (error) {
+      console.error("Error deleting comment:", error.response?.data || error.message);
+      return {
+        success: false,
+        message: error.response?.data?.error || "Failed to delete comment",
+      };
+    }
+  };
+  
   
 
   const loginUser = async (username, password) => {
@@ -168,7 +192,6 @@ const StoreContextProvider = (props) => {
   };
 
 
-  // 👇 Add these two functions inside StoreContextProvider
 
   const deletePost = async (postId) => {
     try {
@@ -364,6 +387,7 @@ const StoreContextProvider = (props) => {
     editDraft,
     deleteDraft,
     addComment,
+    deleteComment,
   };
 
   return (

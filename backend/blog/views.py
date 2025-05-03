@@ -207,6 +207,21 @@ def getCommentsByPost(request, post_id):
     serializer = CommentSerializer(comments, many=True)
     return Response(serializer.data)
 
+# Delete a comment 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteComment(request, comment_id):
+    try:
+        comment = Comment.objects.get(id=comment_id)
+    except Comment.DoesNotExist:
+        return Response({'error': 'Comment not found'}, status=404)
+
+    # Allow deletion if the user is either the comment's author or the post's author
+    if comment.author != request.user and comment.post.author != request.user:
+        return Response({'error': 'You are not authorized to delete this comment'}, status=403)
+
+    comment.delete()
+    return Response({'message': 'Comment deleted successfully'}, status=200)
 
 
 # Forget password functionality

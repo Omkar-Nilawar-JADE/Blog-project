@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../context/StoreContext.jsx';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { FaUserAlt, FaShareAlt, FaFilePdf, FaArrowLeft, FaFileExport, FaComment, FaClock } from 'react-icons/fa';
+import { FaUserAlt, FaShareAlt, FaFilePdf, FaArrowLeft, FaFileExport, FaComment, FaClock, FaTrash } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx'; 
@@ -24,6 +24,8 @@ const PostDetail = () => {
     fetchCommentsByPostId,
     addComment,
     isLoggedIn,
+    deleteComment,
+    userInfo,
   } = useContext(StoreContext);
 
   const loadPost = async () => {
@@ -51,6 +53,19 @@ const PostDetail = () => {
     }
     setIsSubmitting(false);
   };
+
+  const handleDeleteComment = async (commentId) => {
+    const confirm = window.confirm("Are you sure you want to delete this comment?");
+    if (!confirm) return;
+
+    const result = await deleteComment(commentId);
+
+    if(result){
+      loadPost();
+    }
+    else
+      alert(result.message);
+  }
 
   const handleShareLink = () => {
     const url = window.location.href;
@@ -249,34 +264,51 @@ const PostDetail = () => {
             <div className="space-y-4">
               {comments.map(c => (
                 <div
-                  key={c.id}
-                  className="p-5 bg-[#f0f8ff] border-2 border-black rounded-lg shadow-[3px_3px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] transition-all duration-200 hover:-translate-y-1"
-                >
-                  <div className="flex justify-between items-center mb-2 border-b border-gray-200 pb-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-[#4a90e2] text-white flex items-center justify-center">
-                        {c.author.charAt(0).toUpperCase()}
-                      </div>
-                      <span className="font-medium">{c.author}</span>
+                key={c.id}
+                className="p-5 bg-[#f0f8ff] border-2 border-black rounded-lg shadow-[3px_3px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] transition-all duration-200 hover:-translate-y-1"
+              >
+                <div className="flex justify-between items-center mb-2 border-b border-gray-200 pb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-[#4a90e2] text-white flex items-center justify-center">
+                      {c.author.charAt(0).toUpperCase()}
                     </div>
-                    <span className="text-xs text-gray-500">{formatDistanceToNow(new Date(c.created_at), { addSuffix: true })}</span>
+                    <span className="font-medium">{c.author}</span>
                   </div>
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    components={{
-                      a: ({ node, ...props }) => (
-                        <a
-                          {...props}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 underline hover:text-blue-800 transition-colors duration-200"
-                        />
-                      ),
-                    }}
-                  >
-                    {c.body}
-                  </ReactMarkdown>
+              
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500">
+                      {formatDistanceToNow(new Date(c.created_at), { addSuffix: true })}
+                    </span>
+              
+                    {(userInfo?.username === c.author || userInfo?.username === post.author) && (
+                      <button
+                        onClick={() => handleDeleteComment(c.id)}
+                        className="text-red-600 hover:text-red-800 p-1"
+                        title="Delete comment"
+                      >
+                        <FaTrash className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
                 </div>
+              
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    a: ({ node, ...props }) => (
+                      <a
+                        {...props}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 underline hover:text-blue-800 transition-colors duration-200"
+                      />
+                    ),
+                  }}
+                >
+                  {c.body}
+                </ReactMarkdown>
+              </div>
+              
               ))}
             </div>
           ) : (

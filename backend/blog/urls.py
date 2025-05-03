@@ -10,6 +10,7 @@ urlpatterns = [
     path('login/', views.loginUser),
     path('addComment/', views.addComment),
     path('comments/<int:post_id>/', views.getCommentsByPost),
+    path('deleteComment/<int:comment_id>/',views.deleteComment),
     path('forgotPassword/', views.sendPasswordResetEmail),
     path('resetPassword/', views.resetPassword),
     path('updateUser/', views.updateUser),
