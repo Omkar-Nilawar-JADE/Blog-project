@@ -97,7 +97,7 @@ const StoreContextProvider = (props) => {
         { username, password, email },
         {
           headers: {
-            "Content-Type": "application/json", // ✅ Ensure JSON request
+            "Content-Type": "application/json",
           },
         }
       );
@@ -111,10 +111,21 @@ const StoreContextProvider = (props) => {
       alert(message || "Registration successful");
       navigate("/home");
     } catch (error) {
-      alert("Registration failed. Try again.");
+      if (error.response && error.response.data) {
+        const data = error.response.data;
+        const errorMsg =
+          data.error || // custom error from backend
+          Object.values(data).flat().join("\n") || // serializer errors
+          "Registration failed. Try again.";
+  
+        alert(errorMsg);
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
       console.error("Registration error:", error);
     }
   };
+  
   
 
   const fetchUserData = async () => {

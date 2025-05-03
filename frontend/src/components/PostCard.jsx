@@ -31,7 +31,7 @@ const PostCard = ({
         <div>
           <h2 className="text-2xl font-bold mb-2 leading-snug break-words">{post.title}</h2>
           {post.description && (
-            <p className="text-sm mb-4">{post.description}</p>
+            <p className="text-sm mb-4 break-words">{post.description}</p>
           )}
         </div>
 

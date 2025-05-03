@@ -112,6 +112,15 @@ def deletePost(request, post_id):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def registerUser(request):
+    data = request.data
+
+    if User.objects.filter(username=data.get('username')).exists():
+        return Response({'error': 'Username already exists'}, status=400)
+
+    # Check if email exists
+    if User.objects.filter(email=data.get('email')).exists():
+        return Response({'error': 'Email already exists'}, status=400)
+    
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()

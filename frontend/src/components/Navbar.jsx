@@ -51,11 +51,11 @@ const Navbar = () => {
                   onClick={() => setShowMenu(!showMenu)} 
                   className="flex items-center gap-2 text-black font-semibold hover:scale-105 transition-all"
                 >
-                  <img
+                  {/* <img
                     src={`/Avatars/42.jpg`}
                     alt="User Avatar"
                     className="w-13 h-13 rounded-full object-cover border-2 border-black"
-                  />
+                  /> */}
                   <span className="text-sm text-white">Hi, {userInfo?.username || 'User'}</span>
                 </button>
 
