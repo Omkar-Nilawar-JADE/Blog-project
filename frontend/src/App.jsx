@@ -13,6 +13,7 @@ import {Routes,Route} from 'react-router-dom';
 import UserDrafts from './pages/UserDraft.jsx';
 import Footer from './components/Footer.jsx';
 import NotFound from './pages/NotFound.jsx';
+import AboutUs from './pages/AboutUs.jsx';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -30,6 +31,7 @@ function App() {
         <Route path='/resetPassword/:uid/:token' element={<ResetPassword />} />
         <Route path='/addPost' element={<AddPost />} />
         <Route path='/userDrafts' element={<UserDrafts />} />
+        <Route path='/aboutUs' element={<AboutUs />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
       <Footer />

@@ -4,7 +4,7 @@ import { StoreContext } from "../context/StoreContext";
 import axios from "axios";
 
 const UserProfile = () => {
-  const { userInfo, isLoggedIn, sendPasswordResetEmail } = useContext(StoreContext);
+  const { userInfo, isLoggedIn, sendPasswordResetEmail, fetchUserData} = useContext(StoreContext);
   const [emailMessage, setEmailMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ username: "", email: "" });
@@ -17,7 +17,7 @@ const UserProfile = () => {
     } else {
       setFormData({ username: userInfo?.username || "", email: userInfo?.email || "" });
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn,userInfo]);
 
   const handleForgotPassword = async () => {
     setEmailMessage("");
@@ -49,6 +49,7 @@ const UserProfile = () => {
       );
       setUpdateMessage(res.data.message);
       setShowModal(false);
+      fetchUserData();
     } catch (err) {
       console.error(err);
       setUpdateMessage("Error updating profile.");

@@ -44,8 +44,8 @@ const LandingPage = () => {
             <button className="bg-black text-white font-bold py-3 px-8 border-4 border-black hover:bg-white hover:text-black transition-colors shadow-[6px_6px_0px_0px_rgba(239,68,68,1)]" onClick={handleSeePosts}>
               READ ARTICLES
             </button>
-            <button className="bg-white text-black font-bold py-3 px-8 border-4 border-black hover:bg-black hover:text-white transition-colors">
-              ABOUT ME
+            <button className="bg-white text-black font-bold py-3 px-8 border-4 border-black hover:bg-black hover:text-white transition-colors" onClick={() => navigate("/aboutUs")}>
+              ABOUT US
             </button>
           </div>
         </div>

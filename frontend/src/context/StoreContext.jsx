@@ -376,6 +376,7 @@ const StoreContextProvider = (props) => {
     isLoggedIn,
     userInfo,
     userPosts,
+    fetchUserData,
     logoutUser,
     sendPasswordResetEmail,
     resetUserPassword,

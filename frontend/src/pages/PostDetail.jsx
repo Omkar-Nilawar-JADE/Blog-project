@@ -156,9 +156,9 @@ const PostDetail = () => {
       </div>
 
       {/* Post Card */}
-      <div className="relative w-full max-w-3xl mt-4 p-6 bg-[#fefff3] border-4 border-black rounded-lg shadow-[8px_8px_0_0_#000]">
+      <div className="relative w-full max-w-3xl mt-4 p-10 bg-[#fefff3] border-4 border-black rounded-lg shadow-[8px_8px_0_0_#000]">
         {/* Top-right toolbar */}
-        <div className="absolute top-4 right-4 flex gap-2">
+        <div className="absolute top-2 right-2 flex gap-2">
           <div className="relative">
             <button
               onClick={handleShareLink}
@@ -193,7 +193,7 @@ const PostDetail = () => {
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl sm:text-4xl font-extrabold font-mono uppercase mb-4 border-b-4 border-[#ff6f61] pb-3 mt-8 sm:mt-4">
+        <h1 className="text-3xl sm:text-4xl font-extrabold font-mono uppercase mb-4 border-b-4 border-[#ff6f61] pb-3 mt-10 sm:mt-4">
           {post.title}
         </h1>
 

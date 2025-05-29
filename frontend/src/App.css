@@ -21,3 +21,9 @@
     animation: walk 20s linear infinite;
   }
   
+  @media (max-width: 768px) {
+    .animate-walk {
+      position: absolute;
+      animation: walk 10s linear infinite; 
+    }
+  }
